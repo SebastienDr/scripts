@@ -1,11 +1,16 @@
 package bills;
 
+import com.google.common.base.Splitter;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+
+import static com.google.common.base.Splitter.on;
+import static com.google.common.collect.Lists.newArrayList;
 
 
 public class Bills {
@@ -22,7 +27,7 @@ public class Bills {
     public void filterFilesByPattern() throws IOException {
         Path path = Paths.get(JUSTIFICATION_PATH);
         Files.list(path)
-                .map(x -> x.getFileName().toString())
+                .map(x -> extractFileName(x.getFileName().toString()))
                 .filter(BY_PATTERN)
                 .forEach(System.out::println);
     }
@@ -30,8 +35,7 @@ public class Bills {
     public void filterFilesBySeptember() throws IOException {
         Path path = Paths.get(JUSTIFICATION_PATH);
         Files.list(path)
-                .map(x -> x.getFileName().toString())
-                .map(x -> )
+                .map(x -> extractFileName(x.getFileName().toString()))
                 .filter(BY_SEPTEMBER)
                 .forEach(System.out::println);
     }
@@ -40,8 +44,10 @@ public class Bills {
         Splitter.on(".");
         Pattern universal = Pattern.compile("[a-zA-Z_0-9]*");
         return universal.matcher(test).matches();
+    }
 
-
+    public String extractFileName(String path) {
+        return newArrayList(on(".").split(path)).get(0);
     }
 
 }
